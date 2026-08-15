@@ -27,15 +27,27 @@ button {
 /* =========================================================
    GAME
 ========================================================= */
-.game {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: #17152b;
+/* 地图样式修改 */
+.game { width: 100vw; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.city { 
+    position: relative; 
+    overflow: auto; /* 开启滚动 */
+    width: 2000px;  /* 地图扩大 */
+    height: 2000px; 
+    background-color: #6fa84b;
+    image-rendering: pixelated;
+    cursor: grab;
 }
+.road-horizontal { width: 2000px; height: 72px; top: 46%; background: #625c66; position: absolute; }
+.road-vertical { height: 2000px; width: 72px; left: 43%; background: #625c66; position: absolute; }
 
-/* =========================================================
+/* 其他样式保持不变，确保 NPC 和建筑能正常显示 */
+.npc { position: absolute; transition: all 2s ease; z-index: 20; font-size: 30px; }
+.speech { position: absolute; left: 40px; top: -30px; width: 150px; background: #27233f; color: white; padding: 5px; border: 2px solid #f4e6a2; display: none; z-index: 50; }
+.building { position: absolute; width: 80px; height: 80px; background: #d7b875; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+
+/* 侧边栏保持浮动 */
+.panel { position: fixed; right: 0; top: 0; width: 330px; height: 100vh; background: #27233f; color: white; padding: 10px; z-index: 1000; }/* =========================================================
    TOP HUD
 ========================================================= */
 .topbar {
@@ -88,12 +100,13 @@ button {
 .city {
     flex: 1;
     position: relative;
-    overflow: hidden;
+    overflow: auto; /* 关键：开启滚动 */
+    width: 2000px;  /* 地图宽度 */
+    height: 2000px; /* 地图高度 */
     background-color: #6fa84b;
-    border-right: 5px solid #11101e;
     image-rendering: pixelated;
+    /* 移除掉之前的 flex: 1，并给它一个固定的宽高 */
 }
-
 /* =========================================================
    DAY / NIGHT
 ========================================================= */
