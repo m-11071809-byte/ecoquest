@@ -30,33 +30,37 @@ button {
 /* 地图样式修改 */
 .game { width: 100vw; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 .city {
-    flex-shrink: 0;         /* 关键：防止大地图被 Flex 容器压缩 */
+    flex-shrink: 0;         /* 防止大地图被 Flex 容器压缩 */
     position: relative;
-    overflow: auto;         /* 开启滚动条 */
+    overflow: auto;         /* 开启大地图滚动条 */
     width: 2000px;          /* 地图总宽度 */
     height: 2000px;         /* 地图总高度 */
     background-color: #6fa84b;
-    border-right: 5px solid #11101e;
     image-rendering: pixelated;
     transition: background-color 3s ease, filter 3s ease;
 }
 .road-horizontal {
     position: absolute;
-    top: 46%;           /* 保持在地图高度的 46% 位置 */
-    left: 0;            /* 从地图最左侧开始 */
-    width: 2000px;      /* 强制宽度为地图宽度 */
+    top: 46%;
+    left: 0;
+    width: 2000px;      /* 强制设为大地图的 2000px 宽度 */
     height: 72px;
-    background: #625c66;
-    z-index: 1;         /* 确保它在背景之上 */
+    background: repeating-linear-gradient(0deg, #625c66 0px, #625c66 8px, #56515b 8px, #56515b 16px);
+    border-top: 5px solid #393640;
+    border-bottom: 5px solid #393640;
+    z-index: 2;
 }
+
 .road-vertical {
     position: absolute;
-    left: 43%;          /* 保持在地图宽度的 43% 位置 */
-    top: 0;             /* 从地图最顶端开始 */
-    height: 2000px;     /* 强制高度为地图高度 */
+    left: 43%;
+    top: 0;
     width: 72px;
-    background: #625c66;
-    z-index: 1;         /* 确保它在背景之上 */
+    height: 2000px;     /* 强制设为大地图的 2000px 高度 */
+    background: repeating-linear-gradient(90deg, #625c66 0px, #625c66 8px, #56515b 8px, #56515b 16px);
+    border-left: 5px solid #393640;
+    border-right: 5px solid #393640;
+    z-index: 2;
 }
 
 /* 其他样式保持不变，确保 NPC 和建筑能正常显示 */
