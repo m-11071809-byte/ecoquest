@@ -115,8 +115,10 @@ function roamNPC(npcID) {
     npc.element.style.top = randomY + "%";
 }
 function startNPC(npcID) {
-    setInterval(function() { npcChooseActivity(npcID); }, 12000);
-    // 增加：每隔 6 秒随机跑动一次
+    // 删掉这行报错的代码：
+    // setInterval(function() { npcChooseActivity(npcID); }, 12000);
+
+    // 保留每 6 秒随机移动一次
     setInterval(function() { roamNPC(npcID); }, 6000);
 }
 
