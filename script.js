@@ -103,18 +103,20 @@ function npcSpeak(npcID, text) {
 }
 
 function roamNPC(npcID) {
-    const npc = npcData[npcID].element;
-    const x = Math.floor(Math.random() * 85) + 5;
-    const y = Math.floor(Math.random() * 85) + 5;
-    npc.style.left = x + "%";
-    npc.style.top = y + "%";
-}
+    const npc = npcData[npcID];
+    if (!npc || !npc.element) return;
 
+    // 在地图范围内随机生成百分比坐标 (5% 到 90% 之间)
+    const randomX = Math.floor(Math.random() * 85) + 5;
+    const randomY = Math.floor(Math.random() * 85) + 5;
+
+    npc.element.style.left = randomX + "%";
+    npc.element.style.top = randomY + "%";
+}
 function startNPC(npcID) {
-    setInterval(() => roamNPC(npcID), 5000); // 每5秒随机跑动
-    setInterval(() => {
-        if(Math.random() > 0.7) npcSpeak(npcID, "这城市真美!");
-    }, 8000);
+    setInterval(function() { npcChooseActivity(npcID); }, 12000);
+    // 增加：每隔 6 秒随机跑动一次
+    setInterval(function() { roamNPC(npcID); }, 6000);
 }
 
 startNPC("npc1"); startNPC("npc2"); startNPC("npc3");
