@@ -30,11 +30,11 @@ button {
 /* 地图样式修改 */
 .game { width: 100vw; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 .city {
-    flex-shrink: 0;         /* 防止大地图被 Flex 容器压缩 */
     position: relative;
-    overflow: auto;         /* 开启大地图滚动条 */
-    width: 2000px;          /* 地图总宽度 */
-    height: 2000px;         /* 地图总高度 */
+    width: 2000px;  /* 地图固定总宽度 */
+    height: 2000px; /* 地图固定总高度 */
+    flex-shrink: 0; /* 防止被 flex 容器压缩 */
+    overflow: auto; /* 开启双向滚动条 */
     background-color: #6fa84b;
     image-rendering: pixelated;
     transition: background-color 3s ease, filter 3s ease;
@@ -112,8 +112,9 @@ button {
 ========================================================= */
 .main {
     flex: 1;
-    min-height: 0;
     display: flex;
+    position: relative;
+    overflow: hidden; /* 外部隐藏，内部滚动 */
 }
 
 /* =========================================================
