@@ -1,0 +1,651 @@
+/* =========================================================
+   PIXEL RPG BASE
+========================================================= */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: "Courier New", monospace;
+    background: #17152b;
+    overflow: hidden;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+button {
+    font-family: "Courier New", monospace;
+}
+
+/* =========================================================
+   GAME
+========================================================= */
+.game {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #17152b;
+}
+
+/* =========================================================
+   TOP HUD
+========================================================= */
+.topbar {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: #27233f;
+    border-bottom: 5px solid #11101e;
+    color: white;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 21px;
+    font-weight: bold;
+    color: #f4e6a2;
+    text-shadow: 3px 3px 0 #11101e;
+}
+
+.top-info {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.hud-box {
+    padding: 7px 10px;
+    background: #3b355b;
+    border: 3px solid #6c638c;
+    box-shadow: 3px 3px 0 #11101e;
+    font-size: 12px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+.main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+
+/* =========================================================
+   WORLD (EXPANDED & SCROLLABLE)
+========================================================= */
+.city {
+    flex: 1;
+    position: relative;
+    min-width: 150%;
+    min-height: 150%;
+    overflow: auto; 
+    background-color: #6fa84b;
+    border-right: 5px solid #11101e;
+    image-rendering: pixelated;
+    transition: background-color 3s ease, filter 3s ease;
+}
+
+.city.night {
+    filter: brightness(0.55);
+}
+
+.sun {
+    position: absolute;
+    top: 65px;
+    right: 70px;
+    font-size: 62px;
+    display: none;
+    animation: sunPulse 2s steps(4) infinite alternate;
+}
+
+.moon {
+    position: absolute;
+    top: 20px;
+    right: 80px;
+    font-size: 75px;
+    opacity: 0;
+    transition: opacity 2s ease;
+    z-index: 5;
+}
+
+.city.night .sun {
+    opacity: 0;
+}
+
+.city.night .moon {
+    opacity: 1;
+}
+
+@keyframes sunPulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+}
+
+/* =========================================================
+   GRASS TILE EFFECT
+========================================================= */
+.city::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 200%;
+    height: 200%;
+    background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.045) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(0,0,0,0.045) 25%, transparent 25%);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* =========================================================
+   ROAD
+========================================================= */
+.road-horizontal {
+    position: absolute;
+    width: 200%;
+    height: 72px;
+    top: 46%;
+    background: repeating-linear-gradient(0deg, #625c66 0px, #625c66 8px, #56515b 8px, #56515b 16px);
+    border-top: 5px solid #393640;
+    border-bottom: 5px solid #393640;
+    z-index: 2;
+}
+
+.road-horizontal::after {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 5px;
+    top: 29px;
+    background: repeating-linear-gradient(90deg, #e9dc91 0px, #e9dc91 35px, transparent 35px, transparent 70px);
+}
+
+.road-vertical {
+    position: absolute;
+    height: 200%;
+    width: 72px;
+    left: 43%;
+    background: repeating-linear-gradient(90deg, #625c66 0px, #625c66 8px, #56515b 8px, #56515b 16px);
+    border-left: 5px solid #393640;
+    border-right: 5px solid #393640;
+    z-index: 2;
+}
+
+.road-vertical::after {
+    content: "";
+    position: absolute;
+    height: 200%;
+    width: 5px;
+    left: 29px;
+    background: repeating-linear-gradient(0deg, #e9dc91 0px, #e9dc91 35px, transparent 35px, transparent 70px);
+}
+
+/* =========================================================
+   WATER
+========================================================= */
+.water-area {
+    position: absolute;
+    width: 190px;
+    height: 90px;
+    right: 28%;
+    bottom: 28%;
+    background: repeating-linear-gradient(0deg, #4a9dcc 0px, #4a9dcc 10px, #55a8d5 10px, #55a8d5 20px);
+    border: 5px solid #304f75;
+    z-index: 1;
+    animation: waterMove 1.5s steps(4) infinite;
+}
+
+@keyframes waterMove {
+    0% { background-position: 0 0; }
+    50% { background-position: 15px 0; }
+    100% { background-position: 0 0; }
+}
+
+/* =========================================================
+   BUILDINGS
+========================================================= */
+.building {
+    position: absolute;
+    width: 78px;
+    height: 78px;
+    background: #d7b875;
+    border: 5px solid #30284f;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 5px 5px 0 #30284f;
+    z-index: 6;
+    transition: transform 0.12s steps(2);
+}
+
+.building:hover {
+    transform: translateY(-5px);
+}
+
+.building span {
+    margin-top: 2px;
+    font-size: 8px;
+    font-weight: bold;
+    color: #30284f;
+    background: #f4e6a2;
+    padding: 2px 4px;
+    border: 2px solid #30284f;
+}
+
+/* BUILDING POSITIONS (Spread across expanded map) */
+.tree { left: 10%; top: 10%; }
+.solar { right: 15%; top: 10%; }
+.recycle { left: 10%; bottom: 15%; }
+.bike { right: 15%; bottom: 15%; }
+.bus { left: 47%; top: 20%; }
+.house { left: 20%; top: 25%; }
+.house2 { right: 25%; top: 25%; }
+
+/* =========================================================
+   NPC
+========================================================= */
+.npc {
+    position: absolute;
+    width: 38px;
+    height: 48px;
+    font-size: 31px;
+    z-index: 20;
+    cursor: pointer;
+    transition: left 3s ease-in-out, top 3s ease-in-out;
+    filter: drop-shadow(3px 3px 0 #30284f);
+}
+
+.npc:hover {
+    transform: translateY(-4px);
+}
+
+#npc1 { left: 25%; top: 35%; }
+#npc2 { left: 55%; top: 55%; }
+#npc3 { left: 70%; top: 30%; }
+
+/* DIALOGUE */
+.speech {
+    position: absolute;
+    left: 35px;
+    top: -48px;
+    min-width: 190px;
+    max-width: 230px;
+    padding: 9px;
+    background: #27233f;
+    color: white;
+    border: 4px solid #f4e6a2;
+    box-shadow: 4px 4px 0 #11101e;
+    font-size: 11px;
+    line-height: 1.45;
+    display: none;
+    z-index: 50;
+}
+
+.speech::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 15px;
+    width: 12px;
+    height: 12px;
+    background: #27233f;
+    border-right: 4px solid #f4e6a2;
+    border-bottom: 4px solid #f4e6a2;
+    transform: rotate(45deg);
+}
+
+/* =========================================================
+   WILDLIFE
+========================================================= */
+.wildlife {
+    position: absolute;
+    font-size: 24px;
+    z-index: 12;
+    animation: animalMove 8s steps(16) infinite alternate;
+}
+
+@keyframes animalMove {
+    from { transform: translateX(0); }
+    to { transform: translateX(80px); }
+}
+
+/* =========================================================
+   WEATHER UI & EFFECTS
+========================================================= */
+.weather-label {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    background: #27233f;
+    border: 4px solid #f4e6a2;
+    color: white;
+    font-size: 11px;
+    z-index: 70;
+    box-shadow: 4px 4px 0 #11101e;
+}
+
+.weather-effects {
+    position: absolute;
+    inset: 0;
+    width: 200%;
+    height: 200%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* CLOUDS */
+.cloud {
+    position: absolute;
+    font-size: 58px;
+    opacity: 0.75;
+    display: none;
+    animation: cloudMove 22s linear infinite;
+}
+
+.cloud1 { top: 80px; left: -100px; }
+.cloud2 { top: 155px; left: -280px; animation-delay: 7s; }
+.cloud3 { top: 40px; left: -400px; font-size: 70px; animation-delay: 3s; }
+.cloud4 { top: 125px; left: -550px; font-size: 50px; animation-delay: 10s; }
+.cloud5 { top: 210px; left: -700px; font-size: 65px; animation-delay: 5s; }
+.cloud6 { top: 70px; left: -850px; font-size: 45px; animation-delay: 14s; }
+.cloud7 { top: 190px; left: -1000px; font-size: 75px; animation-delay: 8s; }
+.cloud8 { top: 280px; left: -1200px; font-size: 55px; animation-delay: 17s; }
+
+@keyframes cloudMove {
+    from { transform: translateX(0); }
+    to { transform: translateX(120vw); }
+}
+
+/* RAIN */
+.rain {
+    position: absolute;
+    inset: 0;
+    width: 200%;
+    height: 200%;
+    display: none;
+    opacity: 0.65;
+    background-image:
+        radial-gradient(circle, rgba(210, 235, 255, 0.75) 0px, rgba(210, 235, 255, 0.45) 2px, transparent 3px),
+        radial-gradient(circle, rgba(190, 225, 255, 0.55) 0px, rgba(190, 225, 255, 0.3) 1.5px, transparent 3px),
+        radial-gradient(circle, rgba(220, 240, 255, 0.6) 0px, transparent 3px);
+    background-size: 45px 55px, 70px 80px, 95px 100px;
+    background-position: 0 0, 20px 30px, 40px 10px;
+    animation: waterDrops 0.8s linear infinite;
+}
+
+@keyframes waterDrops {
+    from { background-position: 0 0, 20px 30px, 40px 10px; }
+    to { background-position: 0 55px, 20px 110px, 40px 110px; }
+}
+
+/* =========================================================
+   SIDE PANEL
+========================================================= */
+.panel {
+    width: 330px;
+    background: #27233f;
+    color: white;
+    padding: 13px;
+    overflow-y: auto;
+    border-left: 5px solid #11101e;
+}
+
+.panel h2 {
+    margin-top: 0;
+    color: #f4e6a2;
+    text-shadow: 2px 2px 0 #11101e;
+}
+
+.panel h3 {
+    color: #a8e69c;
+}
+
+/* STAT BARS */
+.stat {
+    margin-bottom: 11px;
+}
+
+.stat-title {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+.bar {
+    width: 100%;
+    height: 14px;
+    background: #11101e;
+    border: 3px solid #6c638c;
+}
+
+.fill {
+    height: 100%;
+    width: 0%;
+    background: #72c95f;
+    transition: width 0.5s steps(8);
+}
+
+/* MENU BOX & BUTTONS */
+.menu-box {
+    margin-top: 14px;
+    padding: 10px;
+    background: #3b355b;
+    border: 4px solid #6c638c;
+    box-shadow: 4px 4px 0 #11101e;
+}
+
+.build-button {
+    width: 100%;
+    margin-bottom: 7px;
+    padding: 8px;
+    border: 3px solid #8f84ad;
+    background: #494267;
+    color: white;
+    cursor: pointer;
+    font-size: 10px;
+    text-align: left;
+    transition: transform 0.1s steps(2);
+}
+
+.build-button:hover {
+    background: #5c537c;
+    transform: translateX(3px);
+}
+
+.build-button:active {
+    transform: translate(3px, 3px);
+}
+
+/* MISSION & CHALLENGE & EVENT */
+.mission {
+    margin-top: 14px;
+    padding: 10px;
+    background: #554b38;
+    border: 4px solid #c8a94e;
+    box-shadow: 4px 4px 0 #11101e;
+    font-size: 10px;
+}
+
+.challenge {
+    margin-top: 14px;
+    padding: 10px;
+    background: #314a55;
+    border: 4px solid #6da8b7;
+    box-shadow: 4px 4px 0 #11101e;
+    font-size: 10px;
+}
+
+.challenge button {
+    width: 100%;
+    padding: 8px;
+    background: #4f8290;
+    color: white;
+    border: 3px solid #8fc5ce;
+    cursor: pointer;
+}
+
+.challenge button:hover {
+    background: #639ca8;
+}
+
+.event {
+    margin-top: 14px;
+    padding: 10px;
+    background: #4b3747;
+    border: 4px solid #9c657f;
+    box-shadow: 4px 4px 0 #11101e;
+    font-size: 10px;
+}
+
+/* MESSAGE & POPUP */
+.message {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    max-width: 330px;
+    padding: 11px;
+    background: #27233f;
+    color: white;
+    border: 4px solid #f4e6a2;
+    box-shadow: 4px 4px 0 #11101e;
+    font-size: 10px;
+    line-height: 1.5;
+    z-index: 60;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 330px;
+    padding: 20px;
+    background: #27233f;
+    color: white;
+    border: 5px solid #f4e6a2;
+    box-shadow: 7px 7px 0 #11101e;
+    display: none;
+    text-align: center;
+    z-index: 200;
+}
+
+.popup h2 {
+    color: #f4e6a2;
+}
+
+.popup button {
+    padding: 9px 20px;
+    background: #567c4f;
+    color: white;
+    border: 3px solid #9fd28f;
+    cursor: pointer;
+}
+
+/* ==========================================
+   MINI GAME POPUP
+========================================== */
+.minigame-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 8, 25, 0.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.minigame-box {
+    position: relative;
+    width: 520px;
+    max-width: 94vw;
+    max-height: 90vh;
+    min-height: 350px;
+    padding: 20px;
+    background: #27233f;
+    color: white;
+    border: 5px solid #f4e6a2;
+    box-shadow: 8px 8px 0 #11101e;
+    text-align: center;
+    overflow: auto;
+}
+
+.seed-basket {
+    user-select: none;
+    z-index: 10;
+}
+
+.close-game {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 32px;
+    height: 32px;
+    background: #8c4058;
+    color: white;
+    border: 3px solid #d9849a;
+    cursor: pointer;
+}
+
+.mini-game-area {
+    position: relative;
+    width: 100%;
+    min-height: 210px;
+    max-height: 55vh;
+    margin-top: 15px;
+    background: #3b355b;
+    border: 4px solid #6c638c;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.road-line {
+    position: absolute;
+    left: 48%;
+    width: 5px;
+    height: 25px;
+    background: white;
+    opacity: 0.7;
+}
+
+.race-bus {
+    user-select: none;
+    pointer-events: none;
+}
+
+.mini-game-info {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    padding: 8px;
+    background: #17152b;
+    border: 3px solid #6c638c;
+}
+
+#miniGameMessage {
+    min-height: 20px;
+    color: #f4e6a2;
+    font-weight: bold;
+}
