@@ -106,9 +106,10 @@ function roamNPC(npcID) {
     const npc = npcData[npcID];
     if (!npc || !npc.element) return;
 
-    // 在地图范围内随机生成百分比坐标 (5% 到 90% 之间)
-    const randomX = Math.floor(Math.random() * 85) + 5;
-    const randomY = Math.floor(Math.random() * 85) + 5;
+    // 限制在中央道路和建筑周围活动 (25% ~ 65%)
+    // 这样它们就不会跑去地图最边缘你看不到的地方
+    const randomX = Math.floor(Math.random() * 40) + 25;
+    const randomY = Math.floor(Math.random() * 40) + 25;
 
     npc.element.style.left = randomX + "%";
     npc.element.style.top = randomY + "%";
