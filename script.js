@@ -28,27 +28,27 @@ function build(type) {
 }
 
 // 升级图标：现在改为叠加数量
+// 升级图标：叠加数量
 function updateFeatureIcon(type) {
-    const level = buildings[type];
-    if (level < 1) { return; }
+    const lvl = buildings[type];
+    if (lvl < 1) return;
 
-    // 取出该建筑的基础图标（取第一个作为代表）
-    const icon = featureIcons[type] ? featureIcons[type][0] : "⭐";
-    const possibleIDs = [type, type + "Icon", type + "-icon", type + "Feature"];
+    const baseIcon = featureIcons[type] || "⭐";
+    // 对应 HTML 中的 ID，例如 treeIcon
+    const iconContainer = document.getElementById(type + "Icon");
 
-    for (let i = 0; i < possibleIDs.length; i++) {
-        const element = document.getElementById(possibleIDs[i]);
-        if (element) {
-            element.innerHTML = ""; // 清空旧图标
-            for (let j = 0; j < level; j++) {
-                const span = document.createElement("span");
-                span.innerText = icon;
-                span.style.margin = "1px";
-                element.appendChild(span);
-            }
-            return;
+    if (iconContainer) {
+        iconContainer.innerHTML = ""; // 清空旧图标
+        // 根据当前等级循环生成图标
+        for (let j = 0; j < lvl; j++) {
+            const span = document.createElement("span");
+            span.innerText = baseIcon;
+            span.style.margin = "1px";
+            span.style.fontSize = "16px"; // 确保多图标时大小合适
+            iconContainer.appendChild(span);
         }
     }
+}
 }
 
 // 同步等级文字
@@ -94,35 +94,56 @@ const npcData = {
     npc3: { element: document.getElementById("npc3"), name: "LEO" }
 };
 
+const npcDialogues = [
+    "The air feels so fresh today! 🌱",
+    "I love riding my bike to work! 🚲",
+    "Did you sort your recycling? ♻️",
+    "Our town is getting greener and greener!",
+    "It's a wonderful day to plant a tree! 🌳"
+];
+
 function npcSpeak(npcID, text) {
     const npcEl = document.getElementById(npcID);
+    if (!npcEl) return;
     const speech = npcEl.querySelector('.speech');
+    if (!speech) return;
+    
     speech.innerText = npcData[npcID].name + ": " + text;
     speech.style.display = "block";
-    setTimeout(() => { speech.style.display = "none"; }, 3000);
+    setTimeout(() => { 
+        speech.style.display = "none"; 
+    }, 3000);
+}
+
+// 随机选择活动（说话或做别的）
+function npcChooseActivity(npcID) {
+    const randomText = npcDialogues[Math.floor(Math.random() * npcDialogues.length)];
+    npcSpeak(npcID, randomText);
 }
 
 function roamNPC(npcID) {
     const npc = npcData[npcID];
     if (!npc || !npc.element) return;
 
-    // 限制在中央道路和建筑周围活动 (25% ~ 65%)
-    // 这样它们就不会跑去地图最边缘你看不到的地方
-    const randomX = Math.floor(Math.random() * 40) + 25;
-    const randomY = Math.floor(Math.random() * 40) + 25;
+    // 让 NPC 在大地图范围内（例如 10% 到 85% 之间）随机漫游
+    const randomX = Math.floor(Math.random() * 75) + 10;
+    const randomY = Math.floor(Math.random() * 75) + 10;
 
     npc.element.style.left = randomX + "%";
     npc.element.style.top = randomY + "%";
 }
-function startNPC(npcID) {
-    // 删掉这行报错的代码：
-    // setInterval(function() { npcChooseActivity(npcID); }, 12000);
 
-    // 保留每 6 秒随机移动一次
-    setInterval(function() { roamNPC(npcID); }, 6000);
+function startNPC(npcID) {
+    // 每隔 7 秒随机说话
+    setInterval(function() { npcChooseActivity(npcID); }, 7000);
+    // 每隔 4 秒随机走动一次（让 NPC 更活跃）
+    setInterval(function() { roamNPC(npcID); }, 4000);
 }
 
-startNPC("npc1"); startNPC("npc2"); startNPC("npc3");
+// 启动所有 NPC
+startNPC("npc1"); 
+startNPC("npc2"); 
+startNPC("npc3")
 
 /* =========================================================
    游戏逻辑与初始化
