@@ -42,18 +42,21 @@ button {
 }
 .road-horizontal {
     position: absolute;
-    width: 2000px; /* 改为2000px */
+    top: 46%;           /* 保持在地图高度的 46% 位置 */
+    left: 0;            /* 从地图最左侧开始 */
+    width: 2000px;      /* 强制宽度为地图宽度 */
     height: 72px;
-    top: 46%;
-    /* 其他保持不变... */
+    background: #625c66;
+    z-index: 1;         /* 确保它在背景之上 */
 }
-
 .road-vertical {
     position: absolute;
-    height: 2000px; /* 改为2000px */
+    left: 43%;          /* 保持在地图宽度的 43% 位置 */
+    top: 0;             /* 从地图最顶端开始 */
+    height: 2000px;     /* 强制高度为地图高度 */
     width: 72px;
-    left: 43%;
-    /* 其他保持不变... */
+    background: #625c66;
+    z-index: 1;         /* 确保它在背景之上 */
 }
 
 /* 其他样式保持不变，确保 NPC 和建筑能正常显示 */
