@@ -29,13 +29,24 @@ function build(type) {
 
 // 升级图标：现在改为叠加数量
 function updateFeatureIcon(type) {
-    const element = document.getElementById(type + "Icon");
-    if (element) {
-        element.innerHTML = ""; 
-        for (let i = 0; i < buildings[type]; i++) {
-            const span = document.createElement("span");
-            span.innerText = featureIcons[type];
-            element.appendChild(span);
+    const level = buildings[type];
+    if (level < 1) { return; }
+
+    // 取出该建筑的基础图标（取第一个作为代表）
+    const icon = featureIcons[type] ? featureIcons[type][0] : "⭐";
+    const possibleIDs = [type, type + "Icon", type + "-icon", type + "Feature"];
+
+    for (let i = 0; i < possibleIDs.length; i++) {
+        const element = document.getElementById(possibleIDs[i]);
+        if (element) {
+            element.innerHTML = ""; // 清空旧图标
+            for (let j = 0; j < level; j++) {
+                const span = document.createElement("span");
+                span.innerText = icon;
+                span.style.margin = "1px";
+                element.appendChild(span);
+            }
+            return;
         }
     }
 }
