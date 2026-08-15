@@ -30,11 +30,11 @@ button {
 /* 地图样式修改 */
 .game { width: 100vw; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 .city {
-    flex: 1;
+    flex-shrink: 0;         /* 关键：防止大地图被 Flex 容器压缩 */
     position: relative;
-    overflow: auto; /* 关键：开启滚动条 */
-    width: 2000px;  /* 地图总宽度 */
-    height: 2000px; /* 地图总高度 */
+    overflow: auto;         /* 开启滚动条 */
+    width: 2000px;          /* 地图总宽度 */
+    height: 2000px;         /* 地图总高度 */
     background-color: #6fa84b;
     border-right: 5px solid #11101e;
     image-rendering: pixelated;
